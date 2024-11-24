@@ -16,6 +16,22 @@
 
 }
 
+.loading-spinner {
+  margin-top: 1rem;
+  border: 8px solid #9a238e;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s ease-in-out infinite;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .card {
   padding: 2em;
 }

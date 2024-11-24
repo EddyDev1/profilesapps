@@ -12,6 +12,7 @@ import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
 import { generateClient } from "aws-amplify/data";
 import outputs from "../amplify_outputs.json";
+import {fetchNewAffirmation, init} from "./genAI.js";
 /**
  * @type {import('aws-amplify/data').Client<import('../amplify/data/resource').Schema>}
  */
@@ -23,10 +24,12 @@ const client = generateClient({
 
 export default function App() {
     const [userprofiles, setUserProfiles] = useState([]);
+    const [disable, setDisable] = useState(false);
     const { signOut } = useAuthenticator((context) => [context.user]);
 
     useEffect(() => {
         fetchUserProfile();
+        init();
     }, []);
 
     async function fetchUserProfile() {
@@ -68,6 +71,22 @@ export default function App() {
                     >
                         <View>
                             <Heading level="3">{userprofile.email}</Heading>
+                            <br/>
+                            <Heading level="4">Talk to our Generative AI!</Heading>
+                            <br/>
+                            <input type="text" id="ai-input"/>
+                            <button id="get-response" type="submit" onClick={async () => {
+                                setDisable(true);
+                                await fetchNewAffirmation([
+                                    {
+                                        role: "user",
+                                        content: [{ text: document.querySelector("#ai-input").value }],
+                                    },
+                                ]);
+                                setDisable(false)
+                            }} disabled={disable}>Chat</button>
+                            <br/>
+                            <Heading level="5" id="ai-output"></Heading>
                         </View>
                     </Flex>
                 ))}
